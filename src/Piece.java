@@ -3,16 +3,26 @@
 public abstract class Piece {
 
     private final Color color;
-    private  Location location;
+    private Location location;
     private final PieceType pieceType;
     private boolean killed;
 
+    private static int whitePiecesDied = 0;
+    private static int blackPiecesDied = 0;
+
+    public static boolean isAllWhitePiecesKilled() {
+        return whitePiecesDied == 15;
+    }
+
+    public static boolean isAllBlackPiecesKilled() {
+        return blackPiecesDied == 15;
+    }
 
     public Piece(Color color, PieceType pieceType, Location location) {
         this.color = color;
         this.pieceType = pieceType;
         this.location = location;
-        this.killed=false;
+        this.killed = false;
     }
 
     public Color getColor() {
@@ -40,6 +50,10 @@ public abstract class Piece {
     }
 
     public void setKilled(boolean killed) {
+
+        if (this.color == Color.WHITE)
+            whitePiecesDied++;
+        else blackPiecesDied++;
         this.killed = killed;
     }
 

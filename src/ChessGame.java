@@ -11,7 +11,7 @@ public class ChessGame {
     private boolean isWhiteTurn;
     private static ChessGame game;
 
-    public ChessGame(String whitePlayerName, String blackPlayerName) {
+    private ChessGame(String whitePlayerName, String blackPlayerName) {
         chessBoard = new ChessBoard(whitePlayerName, blackPlayerName);
         isWhiteTurn = true;
     }
@@ -69,7 +69,7 @@ public class ChessGame {
     }
 
     private static boolean isValidMove(String move) {
-        return Pattern.matches("move ([a-hA-H][0-9] [a-hA-H][0-9])", move);
+        return Pattern.matches("move ([a-hA-H]\\d [a-hA-H]\\d)", move);
     }
 
     public void playBlack(String move, Color color) {

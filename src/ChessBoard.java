@@ -32,17 +32,6 @@ public class ChessBoard {
         return chessBoard[xAxis][yAxis];
     }
 
-    public Player getWhitePlayer() {
-        return whitePlayer;
-    }
-
-    public Player getBlackPlayer() {
-        return blackPlayer;
-    }
-
-    public PieceFactory getPieceFactory() {
-        return pieceFactory;
-    }
 
     public static boolean isPathClear(Location currentLocation,Location nextLocation) {
         int x1=currentLocation.getxAxis(),y1=currentLocation.getyAxis(),
@@ -113,20 +102,20 @@ public class ChessBoard {
 
     private void createBlackPieces(Color color) {
         for (int i = 0; i < 8; i++)
-            chessBoard[1][i] = pieceFactory.createPiece(PieceType.PAWN, color, new Location(1, i));
+            chessBoard[1][i] = pieceFactory.buildPiece(PieceType.PAWN, color, new Location(1, i));
 
-        chessBoard[0][0] = pieceFactory.createPiece(PieceType.ROOK, color, new Location(0, 0));
-        chessBoard[0][1] = pieceFactory.createPiece(PieceType.KNIGHT, color, new Location(0, 1));
-        chessBoard[0][2] = pieceFactory.createPiece(PieceType.BISHOP, color, new Location(0, 2));
+        chessBoard[0][0] = pieceFactory.buildPiece(PieceType.ROOK, color, new Location(0, 0));
+        chessBoard[0][1] = pieceFactory.buildPiece(PieceType.KNIGHT, color, new Location(0, 1));
+        chessBoard[0][2] = pieceFactory.buildPiece(PieceType.BISHOP, color, new Location(0, 2));
 
-        chessBoard[0][3] = pieceFactory.createPiece(PieceType.QUEEN, color, new Location(0, 3));
+        chessBoard[0][3] = pieceFactory.buildPiece(PieceType.QUEEN, color, new Location(0, 3));
 
-        blackKing = pieceFactory.createPiece(PieceType.KING, Color.BLACK, new Location(0, 4));
+        blackKing = pieceFactory.buildPiece(PieceType.KING, Color.BLACK, new Location(0, 4));
         chessBoard[0][4] = blackKing;
 
-        chessBoard[0][5] = pieceFactory.createPiece(PieceType.BISHOP, color, new Location(0, 5));
-        chessBoard[0][6] = pieceFactory.createPiece(PieceType.KNIGHT, color, new Location(0, 6));
-        chessBoard[0][7] = pieceFactory.createPiece(PieceType.ROOK, color, new Location(0, 7));
+        chessBoard[0][5] = pieceFactory.buildPiece(PieceType.BISHOP, color, new Location(0, 5));
+        chessBoard[0][6] = pieceFactory.buildPiece(PieceType.KNIGHT, color, new Location(0, 6));
+        chessBoard[0][7] = pieceFactory.buildPiece(PieceType.ROOK, color, new Location(0, 7));
     }
 
     public String getWinnerName() {
@@ -135,23 +124,28 @@ public class ChessBoard {
 
     private void createWhitePieces(Color color) {
         for (int i = 0; i < 8; i++)
-            chessBoard[6][i] = pieceFactory.createPiece(PieceType.PAWN, color, new Location(6, i));
+            chessBoard[6][i] = pieceFactory.buildPiece(PieceType.PAWN, color, new Location(6, i));
 
-        chessBoard[7][0] = pieceFactory.createPiece(PieceType.ROOK, color, new Location(7, 0));
-        chessBoard[7][1] = pieceFactory.createPiece(PieceType.KNIGHT, color, new Location(7, 1));
-        chessBoard[7][2] = pieceFactory.createPiece(PieceType.BISHOP, color, new Location(7, 2));
+        chessBoard[7][0] = pieceFactory.buildPiece(PieceType.ROOK, color, new Location(7, 0));
+        chessBoard[7][1] = pieceFactory.buildPiece(PieceType.KNIGHT, color, new Location(7, 1));
+        chessBoard[7][2] = pieceFactory.buildPiece(PieceType.BISHOP, color, new Location(7, 2));
 
-        chessBoard[7][3] = pieceFactory.createPiece(PieceType.QUEEN, color, new Location(7, 3));
+        chessBoard[7][3] = pieceFactory.buildPiece(PieceType.QUEEN, color, new Location(7, 3));
 
-        whiteKing = pieceFactory.createPiece(PieceType.KING, Color.WHITE, new Location(7, 4));
+        whiteKing = pieceFactory.buildPiece(PieceType.KING, Color.WHITE, new Location(7, 4));
         chessBoard[7][4] = whiteKing;
 
-        chessBoard[7][5] = pieceFactory.createPiece(PieceType.BISHOP, color, new Location(7, 5));
-        chessBoard[7][6] = pieceFactory.createPiece(PieceType.KNIGHT, color, new Location(7, 6));
-        chessBoard[7][7] = pieceFactory.createPiece(PieceType.ROOK, color, new Location(7, 7));
+        chessBoard[7][5] = pieceFactory.buildPiece(PieceType.BISHOP, color, new Location(7, 5));
+        chessBoard[7][6] = pieceFactory.buildPiece(PieceType.KNIGHT, color, new Location(7, 6));
+        chessBoard[7][7] = pieceFactory.buildPiece(PieceType.ROOK, color, new Location(7, 7));
     }
 
     public boolean isGameOver() {
+        if (Piece.isAllWhitePiecesKilled() && Piece.isAllBlackPiecesKilled()) {
+            System.out.println("Draw");
+            ChessBoard.printBoard();
+            return true;
+        }
         if (whiteKing.isKilled()) {
             winnerName = blackPlayer.getPlayerName();
             ChessBoard.printBoard();
@@ -165,7 +159,8 @@ public class ChessBoard {
     }
 
     public boolean move(Location currentLocation, Location newLocation) {
-        if (pieceAt(currentLocation).moveValidation(currentLocation, newLocation) || pieceAt(currentLocation).specialMoves(this, newLocation)) {
+        if (pieceAt(currentLocation).moveValidation(currentLocation, newLocation)
+                || pieceAt(currentLocation).specialMoves(this, newLocation)) {
             if (pieceAt(newLocation) != null)
                 pieceAt(newLocation).setKilled(true);
             Checkmate(currentLocation);
